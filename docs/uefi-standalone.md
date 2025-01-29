@@ -155,7 +155,7 @@ You will get a console prompt once booting completes. Run the command `sudo su` 
 
 **DANGER: Damage to the GPT partition table, first partition (`iBootSystemContainer`), or the last partition (`RecoveryOSContainer`) could result in the loss of all data and render the Mac unbootable and unrecoverable without assistance from another computer! Do not use your distro's automated partitioner or partitioning instructions!**
 
-We will add a root partition to the remaining free space and format it as ext4. Alternative partition layouts and filesystems, including LUKS encryption, are possible, but not covered by this guide.
+We will add a root partition to the remaining free space and format it as ext4. Alternative partition layouts and filesystems, are possible, but not covered by this guide.
 
 Create the root partition to fill up the free space:
 ```
@@ -186,7 +186,13 @@ Number  Start (sector)    End (sector)  Size       Code  Name
    6       242965551       244276259   5.0 GiB     FFFF  RecoveryOSContainer
 ```
 
-Format the new root partition:
+Optioanl - If you wish to use LUKS encryption
+```
+nixos# cryptsetup luksFormat --type=luks2 /dev/nvme0n1p5
+nixos# cryptsetup open /dev/nvme0n1p5 luks
+```
+
+Format the new root partition. (if using luks use `/dev/mapper/luks`)
 ```
 nixos# mkfs.ext4 -L nixos /dev/nvme0n1p5
 ```
